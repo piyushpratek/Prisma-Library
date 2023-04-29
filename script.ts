@@ -110,7 +110,7 @@ async function mains() {
     //orderBy: to make an order in ascending or descneding asc/desc
     orderBy: {
       // age: 'asc',
-      age: 'desc',
+      age: 'asc',
     },
     //if we use distinct on name then it will only get the first Hunter with the name ,,,  can also do with name and age-- it will give Hungter with different age now --it wil return which ever has unique name and age because name and age is different for them
     // distinct: ['name'],
