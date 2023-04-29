@@ -1,11 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { error, log } from 'console';
 const prisma = new PrismaClient();
 
 async function main() {
   //...we will write our prisma client queries here
-  prisma.user.create({ data: { name: 'Piyush' } });
-  console.log(error);
+  const user = await prisma.user.create({ data: { name: 'Saurav' } });
+  console.log(user);
 }
 
 main()
