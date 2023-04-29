@@ -1,6 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// atrributes = @unique  ,   @updatedAt
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,7 +11,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//for autoincrement of id we can use 
+// id          Int     @id @default(autoincrement()) 
+//using uuid for more secure 
 model User {
-  id   Int    @id @default(autoincrement())
-  name String
+  id               String          @id @default(uuid())
+  age              Int
+  name             String
+  email            String          @unique
+  // isAdmin        Boolean
+  //role + with type Rope + with @default(BASIC) --basic user 
+  role             Role            @default(BASIC)
+  // preferences   Json
+  // posts       Post[]
+  writtenPosts     Post[]          @relation("WrittenPosts")
+  favoritePosts    Post[]          @relation("FavoritePosts")
+  userPreference   UserPreference? @relation(fields: [userPreferenceId], references: [id])
+  userPreferenceId String?         @unique
+
+  //block level attribute with uniqueness -- now we cannot have two person with the same name and age
+  @@unique([age, name])
+  //@@index - used in sorting and performing ,,,, and we also index on like email and name 
+  @@index([email])
+}
+
+//we can store relationship on either th euser table or userpreference table -- we are storing in userpreferences 
+// creating user preference
+model UserPreference {
+  id           String  @id @default(uuid())
+  emailUpdates Boolean
+  user         User?
+}
+
+model Post {
+  //commenting id so we can create using @@ at downside 
+  id            String   @id @default(uuid())
+  title         String
+  averageRating Float
+  // rating        Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  author        User     @relation("WrittenPosts", fields: [authorId], references: [id])
+  authorId      String
+
+  //  ? -=consider as optional 
+  favoritedBy   User?      @relation("FavoritePosts", fields: [favoritedById], references: [id])
+  favoritedById String?
+  categories    Category[]
+
+  //@@id-- in below it is like title and authorid represent our id for the post
+  // @@id([title, authorId])
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name  String @unique
+  posts Post[]
+}
+
+// it is other type os data source generator model that is enum
+enum Role {
+  BASIC
+  EDITOR
+  ADMIN
 }
