@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { log } from 'console';
 //normal syntax
 const prisma = new PrismaClient();
 
@@ -102,7 +103,7 @@ async function changetomains() {
 // }
 
 // findMany --to find many users that matches
-async function mains() {
+async function change2mains() {
   const user = await prisma.user.findMany({
     where: {
       name: 'Hunter',
@@ -124,17 +125,17 @@ async function mains() {
   console.log(user);
 }
 
-// async function mains() {
-//   await prisma.user.createMany({
-//     data: [
-//       {
-//         name: 'Hunter',
-//         age: 21,
-//         email: 'hunter5@test.com',
-//       },
-//     ],
-//   });
-// }
+async function mains() {
+  await prisma.user.createMany({
+    data: [
+      {
+        name: 'Hunter',
+        age: 21,
+        email: 'hunter5@test.com',
+      },
+    ],
+  });
+}
 mains()
   .catch((e) => {
     console.log(e.message);
