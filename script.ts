@@ -224,20 +224,125 @@ async function change222mains() {
       },
     },
   });
-  console.log(user.length); //get length
-  console.log(user);
+  // console.log(user.length); //get length
+  // console.log(user);
 }
 
 //Updating =two functions we have = "update" will update the first user it finds and "updateMany" will update every user it finds that matches the data
 // update = takes two section =were gonna have a data and we're going to have where  data and where =combines find and create
 
-async function mains() {
-  const user = await prisma.user.update({
+// async function mains() {
+//   const user = await prisma.user.update({
+//     where: {
+//       email: 'hunter14@test.com',
+//     },
+//     data: {
+//       email: 'hunter13@test.com',
+//     },
+//   });
+//   console.log(user);
+// }
+
+//updating old name to new name  =updateMany doenst allow us to do select or an include  with findMany and createMany you also cannot do that
+async function mains2() {
+  const user = await prisma.user.updateMany({
     where: {
-      email: 'hunter14@test.com',
+      name: 'Hunter',
     },
     data: {
-      email: 'hunter13@test.com',
+      name: 'Black Hunter',
+    },
+  });
+
+  console.log(user);
+}
+
+async function mains22() {
+  const user = await prisma.user.findFirst({
+    where: {
+      name: 'Black Hunter',
+    },
+  });
+
+  console.log(user);
+}
+
+//when it comes to age update is good
+async function mains222() {
+  const user = await prisma.user.update({
+    where: {
+      email: 'hunter15@test.com',
+    },
+    // data: {
+    //   age: {
+    //     increment: 1,
+    //   },
+    // },
+
+    // data: {
+    //   age: {
+    //     // decrement: 10,
+    //     // multiply: 10,
+    //     divide: 9,
+    //   },
+    // },
+
+    data: {
+      userPreference: {
+        connect: {
+          id: 'df37efef-28de-4cec-9e01-3639d7f97afe',
+        },
+      },
+    },
+  });
+
+  console.log(user);
+}
+
+//created emailUpdates true for above userPreference got id which is in connect above
+// async function mains() {
+//   const preference = await prisma.userPreference.create({
+//     data: {
+//       emailUpdates: true,
+//     },
+//   });
+//   console.log(preference);
+// }
+
+async function mains2222() {
+  const user = await prisma.user.findFirst({
+    where: {
+      name: 'Hunter',
+    },
+    include: { userPreference: true },
+  });
+  console.log(user);
+}
+
+//instead of connect say disconnect ==instead can use create
+async function mains1() {
+  const user = await prisma.user.update({
+    where: {
+      email: 'hunter@test.com',
+    },
+    data: {
+      userPreference: {
+        disconnect: true,
+      },
+    },
+  });
+  console.log(user);
+}
+
+//delete  and deleteMany //deleteMany
+//to delete everything just pass as deleteMany()
+async function mains() {
+  const user = await prisma.user.deleteMany({
+    // where: {
+    //   email: 'Hunter@test.com',
+    // },
+    where: {
+      age: { gt: 19 },
     },
   });
   console.log(user);
