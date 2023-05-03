@@ -110,8 +110,8 @@ async function change2mains() {
     },
     //orderBy: to make an order in ascending or descneding asc/desc
     orderBy: {
-      // age: 'asc',
       age: 'asc',
+      // age: 'desc',
     },
     //if we use distinct on name then it will only get the first Hunter with the name ,,,  can also do with name and age-- it will give Hungter with different age now --it wil return which ever has unique name and age because name and age is different for them
     // distinct: ['name'],
@@ -125,16 +125,122 @@ async function change2mains() {
   console.log(user);
 }
 
-async function mains() {
-  await prisma.user.createMany({
-    data: [
-      {
-        name: 'Hunter',
-        age: 21,
-        email: 'hunter5@test.com',
+// async function mains() {
+//   await prisma.user.createMany({
+//     data: [
+//       {
+//         name: 'Hunter',
+//         age: 13,
+//         email: 'hunter13@test.com',
+//       },
+//     ],
+//   });
+// }
+async function change22mains() {
+  const user = await prisma.user.findMany({
+    where: {
+      //gives user with equals name as object
+      // name: { equals: 'Hunter' },
+
+      //it will give which is not equal to
+      // name: { not: 'Hunter' },
+
+      //using "in" and passing as array that gives an array
+      // name: { in: ['Hunter'] },
+
+      //opposite of in which gives an array which doent match
+      // name: { notIn: ['Hunter'] },
+
+      //get user whose age is "lt=less than" 20
+      // age: { lt: 20 },
+
+      //applying type of "and &&" query= it will give person whose name is Hunter and age less than 20
+      // name: 'Hunter',
+      // age: { lt: 20 },
+
+      //greater than 20
+      // age: { gt: 20 },
+
+      //greater than equal to
+      // age: { gte: 20 },
+
+      //less than equal to
+      // age: { lte: 20 },
+
+      //Another query "contains" =allows us to check if the text is contained inside of another piece of text
+      // email: { contains: '@test.com' },
+
+      //More specific use  "endsWith"
+      // email: { endsWith: '@test.com' },
+
+      //"startsWith"
+      // email: { startsWith: 'h' },
+
+      //Combining using "AND" = in Array we can put our query =in below putting as object =use this query while on emails
+      AND: [
+        // { email: { startsWith: 'hunter' } },
+        // { email: { endsWith: '@test.com' } },
+      ],
+
+      //OR Query =its gonna return user with the email and user with age also both gets true
+      OR: [
+        // { email: { startsWith: 'hunter' } }, { age: { gt: 20 } }
+      ],
+
+      //NOT Query = it will not give whatever inside of it
+      // NOT: [{ email: { startsWith: 'hunter' } }],
+
+      //Queries on Relationships = gives empty array bcoz none of our user has  " emailUpdates: true,"
+      // userPreference: {
+      //   emailUpdates: true,
+      // },
+
+      //evry single post that this person written, start with the title of test? if so return that user ==stuffing queries like every none some
+      writtenPosts: {
+        // every: {
+        // none: {
+
+        //some= do any one of them have
+        some: {
+          title: 'Test',
+        },
       },
-    ],
+    },
   });
+  console.log(user.length); //get length
+  console.log(user);
+}
+
+//Query = relationship filtering = which actually checks to get our post here =find manhy posts where the user here
+
+async function change222mains() {
+  const user = await prisma.post.findMany({
+    where: {
+      author: {
+        // "is" this a particular author
+        is: {
+          age: 27,
+        },
+      },
+    },
+  });
+  console.log(user.length); //get length
+  console.log(user);
+}
+
+//Updating =two functions we have = "update" will update the first user it finds and "updateMany" will update every user it finds that matches the data
+// update = takes two section =were gonna have a data and we're going to have where  data and where =combines find and create
+
+async function mains() {
+  const user = await prisma.user.update({
+    where: {
+      email: 'hunter14@test.com',
+    },
+    data: {
+      email: 'hunter13@test.com',
+    },
+  });
+  console.log(user);
 }
 mains()
   .catch((e) => {
